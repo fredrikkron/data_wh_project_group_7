@@ -49,7 +49,7 @@ def run_pipeline(query, table_name, occupation_fields):
     pipeline = dlt.pipeline(
         pipeline_name="jobads_search",
         destination="snowflake",
-        dataset_name="staging",
+        dataset_name="staging"
     )
 
     for occupation_field in occupation_fields:

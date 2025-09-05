@@ -43,6 +43,10 @@ GRANT USAGE ON DATABASE project_HR TO ROLE dlt_readonly_role;
 GRANT USAGE ON SCHEMA project_HR.staging TO ROLE dlt_dev_role;
 GRANT USAGE ON SCHEMA project_HR.staging TO ROLE dlt_readonly_role;
 
+GRANT CREATE TABLE ON SCHEMA project_HR.staging TO ROLE dlt_dev_role;
+
+SHOW ROLES;
+
 
 -- ======================================
 -- 4️⃣ Table privileges

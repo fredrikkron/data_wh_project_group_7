@@ -15,6 +15,3 @@ CREATE DATABASE project_HR;
 
 -- Schemas
 CREATE SCHEMA project_HR.staging;
-
-
-
