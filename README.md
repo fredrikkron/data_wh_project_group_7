@@ -25,7 +25,9 @@
 - git branch -D branch-name      # Force delete
 
 Requirements
+
 One person installs the necessary packages and creates a requirements file that is pushed to GitHub:
 - uv pip freeze > requirements.txt
+
 Other people install the dependencies listed in the requirements file:
 - uv pip install -r requirements.txt
