@@ -57,6 +57,9 @@ GRANT SELECT ON FUTURE TABLES IN SCHEMA project_HR.staging TO ROLE dlt_readonly_
 GRANT SELECT ON FUTURE TABLES IN DATABASE project_HR TO ROLE dlt_readonly_role;
 
 
+SHOW GRANTS TO ROLE dlt_readonly_role;
+SHOW GRANTS TO ROLE dlt_dev_role;
+
 
 
 
