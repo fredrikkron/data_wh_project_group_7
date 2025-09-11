@@ -42,6 +42,7 @@ decorator==5.2.1
 deepdiff==7.0.1
 dlt==1.15.0
 docstring-parser==0.17.0
+dotenv==0.9.9
 et-xmlfile==2.0.0
 executing==2.2.1
 filelock==3.19.1
