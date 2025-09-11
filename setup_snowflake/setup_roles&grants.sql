@@ -1,8 +1,8 @@
 USE ROLE USERADMIN;
 SELECT CURRENT_USER;
 
-CREATE ROLE dlt_dev_role;
-CREATE ROLE dlt_readonly_role;
+CREATE ROLE IF NOT EXISTS dlt_dev_role;
+CREATE ROLE IF NOT EXISTS dlt_readonly_role;
 
 -- switch to an appropriate role to grant privileges to role & grant role to user
 USE ROLE SECURITYADMIN;
