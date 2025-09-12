@@ -173,7 +173,7 @@ tzdata==2025.2
 universal-pathlib==0.2.6
 urllib3==2.5.0
 uvicorn==0.35.0
-uvloop==0.21.0
+uvloop==0.21.0 # Note: only works on Unix
 watchdog==5.0.3
 watchfiles==1.1.0
 wcwidth==0.2.13
