@@ -41,6 +41,7 @@ USE ROLE SECURITYADMIN;
 GRANT USAGE ON WAREHOUSE group_wh TO ROLE dlt_dev_role;
 GRANT USAGE ON WAREHOUSE group_wh TO ROLE dlt_readonly_role;
 GRANT USAGE ON WAREHOUSE dev_wh TO ROLE marts_streamer_role;
+GRANT USAGE ON WAREHOUSE group_wh TO ROLE marts_streamer_role;
 
 -- ======================================================
 -- 5️⃣ Grant database usage
@@ -78,6 +79,8 @@ GRANT SELECT ON ALL VIEWS IN SCHEMA project_hr.marts TO ROLE marts_streamer_role
 GRANT SELECT ON FUTURE TABLES IN SCHEMA project_hr.marts TO ROLE marts_streamer_role;
 GRANT SELECT ON FUTURE VIEWS IN SCHEMA project_hr.marts TO ROLE marts_streamer_role;
 
+
+
 -- ======================================================
 -- 8️⃣ Validation
 -- ======================================================
@@ -85,4 +88,10 @@ SHOW ROLES;
 SHOW GRANTS TO ROLE dlt_dev_role;
 SHOW GRANTS TO ROLE dlt_readonly_role;
 SHOW GRANTS TO ROLE marts_streamer_role;
+
+
+--- TEST QUERY -------------------------------
+SELECT * FROM project_hr.marts.marts_bygg;
+SELECT * FROM project_hr.warehouse.dim_occupation;
+
 
