@@ -34,5 +34,5 @@ INNER JOIN dim_employer e
     ON f.employer_id = e.employer_id
 INNER JOIN dim_auxilliary_attributes a
     ON f.auxilliary_attributes_id = a.auxilliary_attributes_id
-WHERE o.occupation_field = 'Pedagogik'
+WHERE o.occupation_field = 'Bygg och anläggning'
 GROUP BY j.job_id
