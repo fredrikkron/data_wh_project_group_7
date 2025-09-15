@@ -1,0 +1,145 @@
+version: 2
+
+models:
+  - name: fct_job_ads
+    description: "Fact table containing metrics about job ads, linked to occupations."
+    columns:
+      - name: occupation_id
+        description: "Foreign key reference to dim_occupation."
+        data_tests:
+          - relationships:
+              to: ref('dim_occupation')
+              field: occupation_id
+      - name: vacancies
+        description: "Number of open positions for this job ad."
+        data_tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: number
+          - dbt_expectations.expect_column_max_to_be_between:
+              min_value: 1
+              max_value: 20
+              config:
+                severity: warn
+      - name: relevance
+        description: "Relevance score between 0 and 1."
+        data_tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 1
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: float
+      - name: application_deadline
+        description: "Deadline for applying to the job ad."
+
+  - name: dim_auxilliary_attributes
+    description: "Dimension table containing auxiliary attributes for job ads, such as experience and driving requirements."
+    columns:
+      - name: auxilliary_attributes_id
+        description: "Primary key, surrogate key for each set of auxiliary attributes."
+      - name: experience_required
+        description: "Indicates if prior experience is required for the job."
+      - name: driving_license_required
+        description: "Indicates if a driving license is required for the job."
+      - name: access_to_own_car
+        description: "Indicates if access to a personal car is required for the job."
+
+  - name: dim_employer
+    description: "Dimension table containing details about employers posting job ads."
+    columns:
+      - name: employer_id
+        description: "Primary key, surrogate key for each unique employer/workplace combination."
+      - name: employer__name
+        description: "Name of the employer organization."
+      - name: employer__workplace
+        description: "Specific workplace or office location."
+      - name: employer__organization_number
+        description: "Official registration number of the employer organization."
+      - name: workplace_address__street_address
+        description: "Street address of the employer's workplace."
+      - name: workplace_address__region
+        description: "Region or state of the workplace."
+      - name: workplace_address__postcode
+        description: "Postal code of the workplace."
+      - name: workplace_address__city
+        description: "City where the workplace is located."
+      - name: workplace_address__country
+        description: "Country of the workplace."
+
+  - name: dim_job_details
+    description: "Dimension table containing detailed job information for each job listing."
+    columns:
+      - name: job_details_id
+        description: "Primary key, surrogate key for each job detail entry."
+      - name: job_id
+        description: "Reference ID for the job ad (links to fact table)."
+      - name: headline
+        description: "Job ad headline/title."
+      - name: description__text
+        description: "Raw text of the job description."
+      - name: description__text_formatted
+        description: "Formatted job description text."
+      - name: employment_type__label
+        description: "Employment type (e.g., 'Heltid', 'Deltid')."
+      - name: duration__label
+        description: "Job duration (e.g., permanent, temporary)."
+      - name: salary_type__label
+        description: "Type of salary (e.g., hourly, monthly)."
+      - name: scope_of_work__min
+        description: "Minimum scope of work (hours per week or similar)."
+      - name: scope_of_work__max
+        description: "Maximum scope of work."
+
+  - name: dim_occupation
+    description: "Dimension table containing unique occupations and their hierarchical classification."
+    columns:
+      - name: occupation_id
+        description: "Primary key, surrogate key for each unique occupation."
+      - name: occupation
+        description: "Title of the occupation (e.g., 'Lärare i grundskolan')."
+      - name: occupation_group
+        description: "Broader category grouping occupations (e.g., 'Pedagogik')."
+      - name: occupation_field
+        description: "High-level field of work (e.g., 'Utbildning')."
+
+
+  - name: marts_pedagogik
+    description: "Mart table containing business-friendly job ad data for the Pedagogik field."
+    columns:
+      - name: job_id
+        description: "Unique identifier for each job listing."
+      - name: occupation
+        description: "Specific occupation title."
+      - name: vacancies
+        description: "Number of open positions in pedagogical jobs."
+      - name: employer__name
+        description: "Employer posting the job."
+      - name: publication_date
+        description: "Date when the ad was published."
+
+  - name: marts_kultur
+    description: "Mart table for culture, media, and design jobs."
+    columns:
+      - name: job_id
+        description: "Unique identifier for each job listing."
+      - name: occupation
+        description: "Specific occupation title."
+      - name: vacancies
+        description: "Number of open positions."
+      - name: employer__name
+        description: "Employer posting the job."
+      - name: publication_date
+        description: "Date when the ad was published."
+
+  - name: marts_bygg
+    description: "Mart table for construction and infrastructure jobs."
+    columns:
+      - name: job_id
+        description: "Unique identifier for each job listing."
+      - name: occupation
+        description: "Specific occupation title."
+      - name: vacancies
+        description: "Number of open positions."
+      - name: employer__name
+        description: "Employer posting the job."
+      - name: publication_date
+        description: "Date when the ad was published."
