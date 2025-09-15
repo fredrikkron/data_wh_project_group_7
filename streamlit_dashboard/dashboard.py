@@ -7,54 +7,53 @@ def layout():
     with col1:
         st.title("HR Job Ads Dashboard")
     with col2:
-        st.image("streamlit_dashboard/images/HR_LOGO.png", width=160)  # adjust width as needed
+        st.image("streamlit_dashboard/images/HR_LOGO.png", width=170)
 
     # Load data for each occupation field
     df_pedagogik = query_job_table("marts_pedagogik")
     df_kultur = query_job_table("marts_kultur")
     df_bygg = query_job_table("marts_bygg")
 
-    # Ensure column names are lowercase
-    df_pedagogik.columns = df_pedagogik.columns.str.lower()
-    df_kultur.columns = df_kultur.columns.str.lower()
-    df_bygg.columns = df_bygg.columns.str.lower()
-
+    # Mapping tables for selectbox
     tables = {
-    "Bygg och anläggning":df_bygg,
-    "Kultur, media, design":df_kultur,
-    "Pedagogik":df_pedagogik
-}
+        "Bygg och anläggning": df_bygg,
+        "Kultur, media, design": df_kultur,
+        "Pedagogik": df_pedagogik
+    }
 
+    # --- Total Vacancies Metrics ---
     st.markdown("## Total Vacancies")
     cols = st.columns(3)
 
     with cols[0]:
-        st.metric(label="Pedagogik", value=df_pedagogik["vacancies"].sum())
+        st.metric(label="Pedagogik", value=df_pedagogik["Vacancies"].sum())
     with cols[1]:
-        st.metric(label="Kultur, media, design", value=df_kultur["vacancies"].sum())
+        st.metric(label="Kultur, media, design", value=df_kultur["Vacancies"].sum())
     with cols[2]:
-        st.metric(label="Bygg och anläggning", value=df_bygg["vacancies"].sum())
+        st.metric(label="Bygg och anläggning", value=df_bygg["Vacancies"].sum())
 
-
-    st.markdown("### Data for vacancies filtered by " \
-    "city and occupation")
+    # --- Data grouped by city and occupation ---
+    st.markdown("### Data for vacancies filtered by city and occupation")
     select_table = st.selectbox("Select occupation field", list(tables.keys()))
     df_pick = tables[select_table]
+
     cols = st.columns(2)
 
+    # Group by city
     with cols[0]:
         df_city = (
-            df_pick.groupby("workplace_address__city", as_index=False)["vacancies"]
+            df_pick.groupby("Workplace City", as_index=False)["Vacancies"]
             .sum()
-            .sort_values("vacancies", ascending=False)
+            .sort_values("Vacancies", ascending=False)
         )
         st.dataframe(df_city, use_container_width=True)
 
+    # Group by occupation
     with cols[1]:
         df_occ = (
-            df_pick.groupby("occupation", as_index=False)["vacancies"]
+            df_pick.groupby("Occupation", as_index=False)["Vacancies"]
             .sum()
-            .sort_values("vacancies", ascending=False)
+            .sort_values("Vacancies", ascending=False)
         )
         st.dataframe(df_occ, use_container_width=True)
 
