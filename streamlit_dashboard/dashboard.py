@@ -7,18 +7,23 @@ def layout():
     with col1:
         st.title("HR Job Ads Dashboard")
     with col2:
-        st.image("streamlit_dashboard\images\HR_LOGO.png", width=160)  # adjust width as needed
+        st.image("streamlit_dashboard/images/HR_LOGO.png", width=160)  # adjust width as needed
 
     # Load data for each occupation field
     df_pedagogik = query_job_table("marts_pedagogik")
     df_kultur = query_job_table("marts_kultur")
     df_bygg = query_job_table("marts_bygg")
 
-    # Ensure column names are lowercase 
+    # Ensure column names are lowercase
     df_pedagogik.columns = df_pedagogik.columns.str.lower()
     df_kultur.columns = df_kultur.columns.str.lower()
     df_bygg.columns = df_bygg.columns.str.lower()
 
+    tables = {
+    "Bygg och anläggning":df_bygg,
+    "Kultur, media, design":df_kultur,
+    "Pedagogik":df_pedagogik
+}
 
     st.markdown("## Total Vacancies")
     cols = st.columns(3)
@@ -31,20 +36,27 @@ def layout():
         st.metric(label="Bygg och anläggning", value=df_bygg["vacancies"].sum())
 
 
-# Raw data section
-    rawdata(df_pedagogik, df_kultur, df_bygg)
+    st.markdown("### Data for vacancies filtered by " \
+    "city and occupation")
+    select_table = st.selectbox("Select occupation field", list(tables.keys()))
+    df_pick = tables[select_table]
+    cols = st.columns(2)
 
-def rawdata(df_pedagogik, df_kultur, df_bygg):
-    st.markdown("## Sample Job Listings Data")
+    with cols[0]:
+        df_city = (
+            df_pick.groupby("workplace_address__city", as_index=False)["vacancies"]
+            .sum()
+            .sort_values("vacancies", ascending=False)
+        )
+        st.dataframe(df_city, use_container_width=True)
 
-    st.markdown("Pedagogik")
-    st.dataframe(df_pedagogik.head())
-
-    st.markdown("Kultur, media, design")
-    st.dataframe(df_kultur.head())
-
-    st.markdown("Bygg och anläggning")
-    st.dataframe(df_bygg.head())
+    with cols[1]:
+        df_occ = (
+            df_pick.groupby("occupation", as_index=False)["vacancies"]
+            .sum()
+            .sort_values("vacancies", ascending=False)
+        )
+        st.dataframe(df_occ, use_container_width=True)
 
 
 if __name__ == "__main__":
