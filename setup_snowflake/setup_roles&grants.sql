@@ -18,6 +18,8 @@ GRANT ROLE dlt_dev_role TO USER freja_user;
 GRANT ROLE dlt_dev_role TO USER thorbjorn_user;
 GRANT ROLE dlt_dev_role TO USER fredrik_user;
 
+GRANT ROLE dlt_dev_role TO USER frey;
+
 -- Read-only role assignments (if needed, add users here)
 
 -- Streamer role assignments
@@ -25,6 +27,7 @@ GRANT ROLE marts_streamer_role TO USER streamer_boy;
 GRANT ROLE marts_streamer_role TO USER frey;
 GRANT ROLE marts_streamer_role TO USER thorbjorn_user;
 GRANT ROLE marts_streamer_role TO USER fredrik_user;
+GRANT ROLE marts_streamer_role TO USER freja_user;
 
 -- ======================================================
 -- 3️⃣ elevated all users to ACCOUNTADMIN
