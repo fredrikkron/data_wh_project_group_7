@@ -60,6 +60,42 @@ def layout():
         )
         st.dataframe(df_occ, use_container_width=True)
 
+    # --- Top 10 Occupation Groups ---
+
+    # Group by Occupation Group
+    df_top10_occ_group = (
+        df_pick.groupby("Occupation Group", as_index=False)["Vacancies"]
+        .sum()
+        .sort_values("Vacancies", ascending=False)
+        .head(10)
+    )
+    # Horizontal bar chart
+    fig = px.bar(
+        df_top10_occ_group,
+        x="Vacancies",
+        y="Occupation Group",
+        orientation="h",
+        text="Vacancies",
+    )
+
+    fig.update_layout(
+        title={
+            'text': f"Top 10 Occupation Groups by vacancies - {select_table}",
+            'font': {'size': 24}
+        },
+        yaxis=dict(
+            title='',
+            tickfont={'size': 16}
+        ),
+        xaxis=dict(
+            title=''
+        ),
+        yaxis_categoryorder='total ascending'
+    )
+
+    fig.update_xaxes(showticklabels=False)
+    st.plotly_chart(fig, use_container_width=True)
+
 
     # Description filtering
 
@@ -110,57 +146,23 @@ def layout():
         ]
 
         # KPI and description
-        cols = st.columns(2)
+        cols = st.columns(3)
 
         with cols[0]:
             st.subheader("Job ID")
             st.write(df_desc["Job ID"].iloc[0])
+        with cols[1]:
+            st.subheader("Vacancies")
+            st.text(df_desc["Vacancies"].iloc[0])
+        with cols[2]:
+            st.subheader("Employment")
+            st.text(df_desc["Duration"].iloc[0])
         # with cols[1]:
             # More relevant KPI
 
-        
+
         st.subheader("Description")
-        st.write(df_desc["Description"].iloc[0])
-
-
-
-# --- Top 10 Occupation Groups ---
-
-    # Group by Occupation Group
-    df_top10_occ_group = (
-        df_pick.groupby("Occupation Group", as_index=False)["Vacancies"]
-        .sum()
-        .sort_values("Vacancies", ascending=False)
-        .head(10)
-    )
-    # Horizontal bar chart 
-    fig = px.bar(
-        df_top10_occ_group,
-        x="Vacancies",
-        y="Occupation Group",
-        orientation="h",
-        text="Vacancies",
-    )
-
-    fig.update_layout(
-        title={
-            'text': f"Top 10 Occupation Groups by vacancies - {select_table}",
-            'font': {'size': 24} 
-        },
-        yaxis=dict(
-            title='', 
-            tickfont={'size': 16}
-        ),
-        xaxis=dict(
-            title=''  
-        ),
-        yaxis_categoryorder='total ascending' 
-    )
-
-    fig.update_xaxes(showticklabels=False)
-    st.plotly_chart(fig, use_container_width=True)
-
-
+        st.write(df_desc["Description Formatted"].iloc[0],unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
