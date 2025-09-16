@@ -45,6 +45,7 @@ def layout():
             df_pick.groupby("Workplace City", as_index=False)["Vacancies"]
             .sum()
             .sort_values("Vacancies", ascending=False)
+            .set_index("Workplace City")
         )
         st.dataframe(df_city, use_container_width=True)
 
@@ -54,6 +55,7 @@ def layout():
             df_pick.groupby("Occupation", as_index=False)["Vacancies"]
             .sum()
             .sort_values("Vacancies", ascending=False)
+            .set_index("Occupation")
         )
         st.dataframe(df_occ, use_container_width=True)
 
