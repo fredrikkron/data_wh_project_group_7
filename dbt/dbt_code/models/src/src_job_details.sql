@@ -12,3 +12,4 @@ select
     scope_of_work__min,
     scope_of_work__max
 from stg_job_ads
+
