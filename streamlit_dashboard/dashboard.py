@@ -46,6 +46,7 @@ def layout():
             df_pick.groupby("Workplace City", as_index=False)["Vacancies"]
             .sum()
             .sort_values("Vacancies", ascending=False)
+            .set_index("Workplace City")
         )
         st.dataframe(df_city, use_container_width=True)
 
@@ -55,6 +56,7 @@ def layout():
             df_pick.groupby("Occupation", as_index=False)["Vacancies"]
             .sum()
             .sort_values("Vacancies", ascending=False)
+            .set_index("Occupation")
         )
         st.dataframe(df_occ, use_container_width=True)
 
@@ -93,7 +95,6 @@ def layout():
 
 
 # --- Top 10 Occupation Groups ---
-    st.markdown("## Top 10 Occupation Groups by Vacancies")
 
     # Group by Occupation Group
     df_top10_occ_group = (
@@ -102,17 +103,31 @@ def layout():
         .sort_values("Vacancies", ascending=False)
         .head(10)
     )
-
-    # Horizontal bar chart using Plotly
+    # Horizontal bar chart 
     fig = px.bar(
         df_top10_occ_group,
         x="Vacancies",
         y="Occupation Group",
         orientation="h",
         text="Vacancies",
-        title=f"Top 10 Occupation Groups in {select_table}"
     )
-    fig.update_layout(yaxis={'categoryorder':'total ascending'})  # biggest on top
+
+    fig.update_layout(
+        title={
+            'text': f"Top 10 Occupation Groups by vacancies - {select_table}",
+            'font': {'size': 24} 
+        },
+        yaxis=dict(
+            title='', 
+            tickfont={'size': 16}
+        ),
+        xaxis=dict(
+            title=''  
+        ),
+        yaxis_categoryorder='total ascending' 
+    )
+
+    fig.update_xaxes(showticklabels=False)
     st.plotly_chart(fig, use_container_width=True)
 
 
