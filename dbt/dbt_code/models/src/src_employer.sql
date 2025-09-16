@@ -10,7 +10,7 @@ select
     coalesce(workplace_address__postcode, 'Other') as workplace_address__postcode,
     COALESCE(
         UPPER(SUBSTR(workplace_address__city,1,1)) || LOWER(SUBSTR(workplace_address__city,2)),
-        'Other'
+        'Annat'
     ) AS workplace_address__city,
     workplace_address__country
 from stg_job_ads
