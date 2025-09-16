@@ -67,30 +67,60 @@ def layout():
 
     cols = st.columns(1)
 
+    # Selectboxes
     with cols[0]:
         selected_city = st.selectbox(
             "Select city",
             sorted(df_pick["Workplace City"].unique()),
-            key=f"{select_table}"
+            key=f"city_{select_table}"
         )
 
         df_chosen_city = df_pick[df_pick["Workplace City"] == selected_city]
 
+
         selected_occ_group = st.selectbox(
             "Select occupation group",
             sorted(df_chosen_city["Occupation Group"].unique()),
-            key=f"occ_group {select_table}"
+            key=f"occ_group_{select_table}"
         )
 
-        df_chosen_occupation_group = df_pick[df_pick["Occupation Group"] == selected_occ_group]
 
-        selected_occ_group = st.selectbox(
+        df_chosen_occ_group = df_chosen_city[df_chosen_city["Occupation Group"] == selected_occ_group]
+
+        selected_occ = st.selectbox(
             "Select occupation",
-            sorted(df_chosen_occupation_group["Occupation"].unique()),
-            key=f"occ {select_table}"
+            sorted(df_chosen_occ_group["Occupation"].unique()),
+            key=f"occ_{select_table}"
         )
 
 
+        df_chosen_occ = df_chosen_occ_group[df_chosen_occ_group["Occupation"] == selected_occ]
+
+        selected_job = st.selectbox(
+            "Select job",
+            df_chosen_occ["Job Title"],
+            key=f"job_{select_table}"
+        )
+
+        df_desc = df_pick[
+            (df_pick["Workplace City"] == selected_city) &
+            (df_pick["Occupation Group"] == selected_occ_group) &
+            (df_pick["Occupation"] == selected_occ) &
+            (df_pick["Job Title"] == selected_job)
+        ]
+
+        # KPI and description
+        cols = st.columns(2)
+
+        with cols[0]:
+            st.subheader("Job ID")
+            st.write(df_desc["Job ID"].iloc[0])
+        # with cols[1]:
+            # More relevant KPI
+
+        
+        st.subheader("Description")
+        st.write(df_desc["Description"].iloc[0])
 
 
 
@@ -135,4 +165,3 @@ def layout():
 
 if __name__ == "__main__":
     layout()
-# df_pick["Occupation Group"].unique()
