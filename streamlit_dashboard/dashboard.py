@@ -1,5 +1,6 @@
 import streamlit as st
 from data_wh_connection import query_job_table
+import plotly.express as px
 
 def layout():
     # --- Title + Logo Side by Side ---
@@ -60,7 +61,7 @@ def layout():
 
     # Description filtering
 
-    st.markdown("### Data for filtering description of a job")
+    st.markdown("## Data for filtering description of a job")
 
     cols = st.columns(1)
 
@@ -86,6 +87,34 @@ def layout():
             sorted(df_chosen_occupation_group["Occupation"].unique()),
             key=f"occ {select_table}"
         )
+
+
+
+
+
+# --- Top 10 Occupation Groups ---
+    st.markdown("## Top 10 Occupation Groups by Vacancies")
+
+    # Group by Occupation Group
+    df_top10_occ_group = (
+        df_pick.groupby("Occupation Group", as_index=False)["Vacancies"]
+        .sum()
+        .sort_values("Vacancies", ascending=False)
+        .head(10)
+    )
+
+    # Horizontal bar chart using Plotly
+    fig = px.bar(
+        df_top10_occ_group,
+        x="Vacancies",
+        y="Occupation Group",
+        orientation="h",
+        text="Vacancies",
+        title=f"Top 10 Occupation Groups in {select_table}"
+    )
+    fig.update_layout(yaxis={'categoryorder':'total ascending'})  # biggest on top
+    st.plotly_chart(fig, use_container_width=True)
+
 
 
 
