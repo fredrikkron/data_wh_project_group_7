@@ -26,15 +26,15 @@ def layout():
     cols = st.columns(3)
 
     with cols[0]:
-        st.metric(label="Pedagogik", value=df_pedagogik["Vacancies"].sum())
+        st.metric(label="Bygg och anläggning", value=df_bygg["Vacancies"].sum())
     with cols[1]:
         st.metric(label="Kultur, media, design", value=df_kultur["Vacancies"].sum())
     with cols[2]:
-        st.metric(label="Bygg och anläggning", value=df_bygg["Vacancies"].sum())
+        st.metric(label="Pedagogik", value=df_pedagogik["Vacancies"].sum())
 
     # --- Data grouped by city and occupation ---
     st.markdown("### Data for vacancies filtered by city and occupation")
-    select_table = st.selectbox("Select occupation field", list(tables.keys()))
+    select_table = st.selectbox("Select occupation field", list(tables.keys()), key="table_selection")
     df_pick = tables[select_table]
 
     cols = st.columns(2)
@@ -58,5 +58,37 @@ def layout():
         st.dataframe(df_occ, use_container_width=True)
 
 
+    # Description filtering
+
+    st.markdown("### Data for filtering description of a job")
+
+    cols = st.columns(1)
+
+    with cols[0]:
+        selected_city = st.selectbox(
+            "Select city",
+            sorted(df_pick["Workplace City"].unique()),
+            key=f"{select_table}"
+        )
+
+        df_chosen_city = df_pick[df_pick["Workplace City"] == selected_city]
+
+        selected_occ_group = st.selectbox(
+            "Select occupation group",
+            sorted(df_chosen_city["Occupation Group"].unique()),
+            key=f"occ_group {select_table}"
+        )
+
+        df_chosen_occupation_group = df_pick[df_pick["Occupation Group"] == selected_occ_group]
+
+        selected_occ_group = st.selectbox(
+            "Select occupation",
+            sorted(df_chosen_occupation_group["Occupation"].unique()),
+            key=f"occ {select_table}"
+        )
+
+
+
 if __name__ == "__main__":
     layout()
+# df_pick["Occupation Group"].unique()
