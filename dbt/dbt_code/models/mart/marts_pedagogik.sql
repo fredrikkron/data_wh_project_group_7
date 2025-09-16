@@ -35,4 +35,5 @@ INNER JOIN dim_employer e
 INNER JOIN dim_auxilliary_attributes a
     ON f.auxilliary_attributes_id = a.auxilliary_attributes_id
 WHERE o.occupation_field = 'Pedagogik'
+    AND f.application_deadline >= CURRENT_DATE
 GROUP BY j.job_id
