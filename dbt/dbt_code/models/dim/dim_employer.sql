@@ -11,3 +11,4 @@ select
     workplace_address__city,
     workplace_address__country
 from src_employer
+
