@@ -6,30 +6,32 @@ models:
     columns:
       - name: occupation_id
         description: "Foreign key reference to dim_occupation."
-        data_tests:
+        data_tests: # expect non-null and valid foreign key references
+          - not_null
           - relationships:
               to: ref('dim_occupation')
               field: occupation_id
       - name: vacancies
         description: "Number of open positions for this job ad."
-        data_tests:
+        data_tests: # expect non-negative integer values
           - dbt_expectations.expect_column_values_to_be_of_type:
               column_type: number
-          - dbt_expectations.expect_column_max_to_be_between:
+          - dbt_expectations.expect_column_max_to_be_between: # check for extreme outliers. otherwise value: 0 to only  check that vacancies are non-negative
               min_value: 1
-              max_value: 20
+              max_value: 200 # 300 is a high but plausible number of vacancies for a single ad
               config:
-                severity: warn
+                severity: warn #send warning if outlier found
       - name: relevance
         description: "Relevance score between 0 and 1."
         data_tests:
-          - dbt_expectations.expect_column_values_to_be_between:
+          - dbt_expectations.expect_column_values_to_be_between: # value between 0 and 1
               min_value: 0
               max_value: 1
           - dbt_expectations.expect_column_values_to_be_of_type:
               column_type: float
       - name: application_deadline
         description: "Deadline for applying to the job ad."
+
 
   - name: dim_auxilliary_attributes
     description: "Dimension table containing auxiliary attributes for job ads, such as experience and driving requirements."
@@ -72,6 +74,8 @@ models:
         description: "Primary key, surrogate key for each job detail entry."
       - name: job_id
         description: "Reference ID for the job ad (links to fact table)."
+        data_tests:
+          - not_null
       - name: headline
         description: "Job ad headline/title."
       - name: description__text
@@ -79,15 +83,15 @@ models:
       - name: description__text_formatted
         description: "Formatted job description text."
       - name: employment_type__label
-        description: "Employment type (e.g., 'Heltid', 'Deltid')."
+        description: "Employment type (e.g., 'Vanlig anställning')."
       - name: duration__label
-        description: "Job duration (e.g., permanent, temporary)."
+        description: "Job duration (e.g., permanent, temporary, 6months)."
       - name: salary_type__label
         description: "Type of salary (e.g., hourly, monthly)."
       - name: scope_of_work__min
-        description: "Minimum scope of work (hours per week or similar)."
+        description: "Minimum scope of work (fulltime, halftime counted by %)."
       - name: scope_of_work__max
-        description: "Maximum scope of work."
+        description: "Maximum scope of work. (fulltime, halftime counted by %)"
 
   - name: dim_occupation
     description: "Dimension table containing unique occupations and their hierarchical classification."
@@ -133,13 +137,13 @@ models:
   - name: marts_bygg
     description: "Mart table for construction and infrastructure jobs."
     columns:
-      - name: job_id
-        description: "Unique identifier for each job listing."
-      - name: occupation
-        description: "Specific occupation title."
-      - name: vacancies
-        description: "Number of open positions."
-      - name: employer__name
-        description: "Employer posting the job."
-      - name: publication_date
-        description: "Date when the ad was published."
+    - name: job_id
+      description: "Unique identifier for each job listing."
+    - name: occupation
+      description: "Specific occupation title."
+    - name: vacancies
+      description: "Number of open positions."
+    - name: employer__name
+      description: "Employer posting the job."
+    - name: publication_date
+      description: "Date when the ad was published."
