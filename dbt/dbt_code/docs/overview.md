@@ -2,21 +2,44 @@
 
 # HR Job Ads Project Overview
 
-This dbt project models job advertisement data to support HR analytics.  
-The goal is to provide insights into **vacancies, occupations, and trends** for decision-making in HR departments.
+![dimensional model](assets/logo.png)
+
+This dbt project models job advertisement data to support **HR analytics**.  
+
+---
 
 ## Data Flow
-1. **Sources**: Job ads are ingested from external tables (e.g. marts_pedagogik, marts_kultur, marts_bygg).  
-2. **Staging Models**: Standardize and clean source data for consistency.  
-3. **Dimension Models**:  
-   - `dim_occupation` contains unique occupations with surrogate keys.  
-4. **Fact Models**:  
-   - `fct_job_ads` stores key metrics like vacancies.  
 
-## Purpose
-This project allows HR teams to:  
-- Get insight into number of open vacancies per occupation field and filter to understand data 
-- Build dashboards in Streamlit
-- etc
+1. **Sources**  
+   Job ads are ingested from external source tables and cleaned in staging models.  
 
-{% docs enddocs %}
+2. **Dimension Models**  
+   - **`dim_occupation`**: unique occupations, grouped into broader categories and fields.  
+   - **`dim_job_details`**: detailed attributes for each job ad (e.g. headline, description, employment type, duration).  
+   - **`dim_employer`**: employer information, including workplace and organization details.  
+   - **`dim_auxilliary_attributes`**: extra attributes such as experience and driving requirements.  
+
+3. **Fact Model**  
+   - **`fct_job_ads`**: the central fact table, storing metrics such as number of vacancies, application deadlines, and relevance scores.  
+
+4. **Mart Models**  
+   Business-friendly subsets of the data tailored for analysis:  
+   - **`marts_pedagogik`**: pedagogical jobs.  
+   - **`marts_kultur`**: culture, media, and design jobs.  
+   - **`marts_bygg`**: construction and infrastructure jobs.  
+
+---
+
+## Testing & Documentation
+
+- **Testing**:  
+  We validate data quality with dbt tests. Examples:  
+  - Foreign keys (e.g. `occupation_id` in `fct_job_ads` must exist in `dim_occupation`).  
+  - Column constraints (e.g. `relevance` must be between 0 and 1, `vacancies` max capped at 300).  
+  - Not-null constraints (e.g. every `job_id` in `dim_job_details` must link back to a fact).  
+
+- **Documentation**:  
+  Every model and column includes a clear description in `schema.yml`.  
+  This ensures BI users and new developers can easily understand the purpose of each table and column.
+
+{% enddocs %}
